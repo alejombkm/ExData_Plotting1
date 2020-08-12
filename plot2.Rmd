@@ -1,0 +1,55 @@
+---
+title: "Plot2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Cargar los datos
+
+```{r}
+household_power_consumption <- read.csv("~/Exploratory data analysis/ExData_Plotting1/household_power_consumption.txt", header=TRUE, sep=";")
+```
+
+#Change classes of Date and Time variables
+
+```{r}
+household_power_consumption$Date <- as.Date(household_power_consumption$Date, format = "%d/%m/%Y")
+household_power_consumption$DateTime <- strptime(paste(household_power_consumption$Date,household_power_consumption$Time),format = "%Y-%m-%d %H:%M:%S")
+```
+
+#Choose the data 
+```{r}
+powerConsum <- household_power_consumption[household_power_consumption$Date >= "2007-2-1" & household_power_consumption$Date <= "2007-2-2",]
+```
+```{r}
+str(powerConsum)
+```
+# Change the type of data
+```{r}
+powerConsum[,3] <- as.numeric(powerConsum[,3])
+powerConsum[,4] <- as.numeric(powerConsum[,4])
+powerConsum[,5] <- as.numeric(powerConsum[,5])
+powerConsum[,6] <- as.numeric(powerConsum[,6])
+powerConsum[,7] <- as.numeric(powerConsum[,7])
+powerConsum[,8] <- as.numeric(powerConsum[,8])
+```
+```{r}
+str(powerConsum)
+```
+
+```{r}
+#Constructing Plot2..because x-axis is named "Koean" in my laptop, I reset x-axis
+with(powerConsum, plot(DateTime, Global_active_power, type = "l", xlab = "",
+                       ylab = "Global Active Power (kilowatts)", xaxt = "n"))
+axis(side = 1, at = c(as.numeric(powerConsum$DateTime[1]),
+                      as.numeric(powerConsum$DateTime[1441]),
+                      as.numeric(powerConsum$DateTime[2880])),labels = c("Thu","Fri","Sat"))
+#Save plot2 to a PNG file
+dev.copy(device = png, width = 480, height = 480, file = "Plot2.png")
+```
+```
+
